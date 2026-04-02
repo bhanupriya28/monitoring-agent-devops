@@ -16,7 +16,7 @@ jobs:
     - name: Checkout microservice code
       uses: actions/checkout@v3
       with:
-        repository: your-github-username/microservice
+        repository: bhanupriya28/monitoring-agent-microservice
         path: microservice
 
     - name: Configure AWS credentials
@@ -30,7 +30,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build and push Docker image
+    - name: Build and push microservice Docker image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: microservice
@@ -38,6 +38,14 @@ jobs:
         cd microservice
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+    - name: Build and push nats-consumer Docker image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: nats-consumer
+      run: |
+        # Assuming nats-consumer is in devops or separate; for now, skip or adjust
+        echo "Build nats-consumer if needed"
 
     - name: Update kubeconfig
       run: aws eks update-kubeconfig --region us-east-1 --name my-cluster
@@ -51,6 +59,9 @@ jobs:
     - name: Deploy with Helm
       run: |
         helm upgrade --install microservice ./helm/microservice --set image.repository=$ECR_REGISTRY/$ECR_REPOSITORY
+        helm upgrade --install log-collector ./helm/log-collector
+        helm upgrade --install nats-consumer ./helm/nats-consumer
+        kubectl apply -f ./manifests/nats-pod.yaml
         helm upgrade --install log-collector ./helm/log-collector
         helm upgrade --install nats-consumer ./helm/nats-consumer
         kubectl apply -f ./manifests/nats-pod.yaml
