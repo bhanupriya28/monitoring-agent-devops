@@ -1,0 +1,6 @@
+image:
+  repository: nats-consumer
+  tag: "latest"
+
+nats:
+  url: nats://nats-cluster:4222

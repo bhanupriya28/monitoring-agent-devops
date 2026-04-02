@@ -1,0 +1,8 @@
+fluentbit:
+  image:
+    repository: fluent/fluent-bit
+    tag: "2.0"
+
+opensearch:
+  host: opensearch-cluster
+  port: 9200

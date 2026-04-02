@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats-consumer
+  template:
+    metadata:
+      labels:
+        app: nats-consumer
+    spec:
+      containers:
+      - name: nats-consumer
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        env:
+        - name: NATS_URL
+          value: {{ .Values.nats.url }}

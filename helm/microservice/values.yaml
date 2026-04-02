@@ -1,0 +1,21 @@
+replicaCount: 1
+
+image:
+  repository: microservice
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 5000
+
+nats:
+  url: nats://nats-cluster:4222
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

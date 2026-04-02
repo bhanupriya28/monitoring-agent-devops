@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "microservice.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "microservice.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "microservice.name" . }}
+    spec:
+      containers:
+      - name: microservice
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        ports:
+        - containerPort: 5000
+        env:
+        - name: NATS_URL
+          value: {{ .Values.nats.url }}
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
