@@ -4,7 +4,7 @@
 
 # Prerequisites: AWS CLI configured, eksctl installed
 
-CLUSTER_NAME=my-cluster
+CLUSTER_NAME=dev-app
 REGION=us-east-1
 
 # Create EKS cluster
